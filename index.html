@@ -4,15 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="https://github.com/ONEThousandandONE-1001/Jiya/blob/main/Screenshot_2025_0214_135557.jpg?raw=true">
-  <title>Bongoboltu | Shooting Game</title>
+  <title>Bongoboltu | Funny Shooting Game</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @keyframes flash {
       0%, 100% { filter: none; }
       50% { filter: brightness(2) saturate(2); }
     }
+    @keyframes wiggle {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
     .character-flash {
       animation: flash 0.2s;
+    }
+    .wiggle {
+      animation: wiggle 0.5s infinite;
     }
   </style>
 </head>
@@ -20,18 +28,19 @@
       style="background-image: url('https://github.com/ONEThousandandONE-1001/Jiya/blob/main/images%20(1)%20(14).jpeg?raw=true');">
 
   <div id="game-container" class="relative h-full w-full">
-    <div id="score" class="absolute top-4 left-4 text-white text-2xl font-bold">Score: 0</div>
-    <div id="timer" class="absolute top-4 right-4 text-white text-2xl font-bold">Time: 60s</div>
+    <div id="score" class="absolute top-4 left-4 text-yellow-300 text-3xl font-extrabold drop-shadow-lg">Score: 0</div>
+    <div id="timer" class="absolute top-4 right-4 text-red-400 text-3xl font-extrabold drop-shadow-lg">Time: 60s</div>
     <img id="gun" 
          src="https://github.com/AkramHossain0/data/blob/main/g.png?raw=true" 
          alt="Gun" 
-         class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-64 h-64 object-contain">
+         class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-64 h-64 object-contain wiggle">
 
-    <div id="game-over" class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div id="game-over" class="hidden absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
       <div class="bg-white p-8 rounded-lg text-center">
-        <h2 class="text-3xl font-bold mb-4">Game Over</h2>
-        <p id="final-score" class="text-xl mb-4">Your score: 0</p>
-        <button id="restart-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+        <h2 class="text-4xl font-bold mb-4">😂 Game Over 😂</h2>
+        <p id="final-score" class="text-2xl mb-4">Your score: 0</p>
+        <p class="text-lg mb-4">Better luck next time, sharpshooter!</p>
+        <button id="restart-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
           Play Again
         </button>
       </div>
@@ -59,7 +68,7 @@
     function createEnemy() {
       const enemy = document.createElement('img');
       enemy.src = "https://github.com/ONEThousandandONE-1001/Jiya/blob/main/Screenshot_2025_0214_135557.jpg?raw=true";
-      enemy.className = "absolute w-24 h-24 object-contain";
+      enemy.className = "absolute w-24 h-24 object-contain wiggle";
       gameContainer.appendChild(enemy);
       updateEnemyPosition(enemy);
       enemies.push(enemy);
@@ -84,57 +93,9 @@
       updateEnemyPosition(enemy);
     }
 
-    function createBullet(x, y, targetX, targetY) {
-      const bullet = document.createElement('div');
-      bullet.className = 'absolute w-2 h-2 bg-yellow-400 rounded-full';
-      bullet.style.left = `${x}px`;
-      bullet.style.top = `${y}px`;
-      gameContainer.appendChild(bullet);
-
-      const angle = Math.atan2(targetY - y, targetX - x);
-      const speed = 12;
-      const vx = Math.cos(angle) * speed;
-      const vy = Math.sin(angle) * speed;
-
-      function moveBullet() {
-        bullet.style.left = `${parseFloat(bullet.style.left) + vx}px`;
-        bullet.style.top = `${parseFloat(bullet.style.top) + vy}px`;
-
-        if (
-          parseFloat(bullet.style.left) < 0 ||
-          parseFloat(bullet.style.left) > gameContainer.clientWidth ||
-          parseFloat(bullet.style.top) < 0 ||
-          parseFloat(bullet.style.top) > gameContainer.clientHeight
-        ) {
-          gameContainer.removeChild(bullet);
-        } else {
-          detectBulletHit(bullet);
-          requestAnimationFrame(moveBullet);
-        }
-      }
-
-      requestAnimationFrame(moveBullet);
-    }
-
-    function detectBulletHit(bullet) {
-      enemies.forEach(enemy => {
-        const enemyRect = enemy.getBoundingClientRect();
-        const bulletRect = bullet.getBoundingClientRect();
-        if (
-          bulletRect.left < enemyRect.right &&
-          bulletRect.right > enemyRect.left &&
-          bulletRect.top < enemyRect.bottom &&
-          bulletRect.bottom > enemyRect.top
-        ) {
-          gameContainer.removeChild(bullet);
-          hitEnemy(enemy);
-        }
-      });
-    }
-
     function createBlastEffect(x, y) {
       const blast = document.createElement('div');
-      blast.className = 'absolute w-8 h-8 bg-red-500 rounded-full opacity-75';
+      blast.className = 'absolute w-8 h-8 bg-pink-500 rounded-full opacity-75';
       blast.style.left = `${x - 16}px`;
       blast.style.top = `${y - 16}px`;
       gameContainer.appendChild(blast);
@@ -194,6 +155,5 @@
 
     startGame();
   </script>
-
 </body>
 </html>
